@@ -1,0 +1,6 @@
+NS = mlan
+VOLUMES = 
+PORTS = -p 8001:1234
+ENV =
+
+
