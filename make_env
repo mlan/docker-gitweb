@@ -1,6 +1,6 @@
 NS = mlan
-VOLUMES = 
-PORTS = -p 8001:1234
+VOLUMES = -v gitolite-git:/var/lib/git
+PORTS = -p 8003:80
 ENV =
 
 
