@@ -8,9 +8,9 @@ CONTAINER_NAME ?= gitweb
 CONTAINER_INSTANCE ?= default
 SHELL ?= /bin/sh
 
-.PHONY: build  build-force shell exec run run-fg start stop rm-container rm-image purge create sleep
+.PHONY: build  build-force shell exec run run-fg start stop rm-container rm-image purge create sleep logs
 
-build: 
+build:
 	docker build -t $(NS)/$(IMAGE_NAME):$(VERSION) -f Dockerfile .
 
 build-force: stop purge build
@@ -39,6 +39,8 @@ rm-container:
 rm-image:
 	docker image rm $(NS)/$(IMAGE_NAME):$(VERSION)
 
+logs:
+	docker container logs $(CONTAINER_NAME)-$(CONTAINER_INSTANCE)
 
 create:
 	docker create --name $(CONTAINER_NAME)-$(CONTAINER_INSTANCE) $(PORTS) $(VOLUMES) $(ENV) $(NS)/$(IMAGE_NAME):$(VERSION)

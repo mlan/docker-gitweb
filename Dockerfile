@@ -9,8 +9,9 @@ RUN	apk --no-cache --update add \
 
 COPY	etc/nginx/conf.d/gitweb.conf /etc/nginx/conf.d/.
 COPY	etc/gitweb.conf /etc/.
-COPY	entrypoint.sh /usr/local/bin/.
+RUN	mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.off
 
 EXPOSE  80
 
-CMD 	["entrypoint.sh"]
+CMD 	spawn-fcgi -s /var/run/fcgiwrap.socket -M 0666 -u nginx -- /usr/bin/fcgiwrap && \
+	nginx -g "daemon off;"
