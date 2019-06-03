@@ -11,7 +11,9 @@ IMG_CMD  ?= /bin/sh
 TST_NAME ?= test-gitweb
 TST_PORT ?= localhost:8080
 TST_INET ?= -p $(TST_PORT):80
-TST_VOLS ?= -v $(shell pwd)/test/repo:/var/lib/git:ro
+TST_DIR  ?= test/repo
+TST_REPO ?= mlan/docker-gitweb
+TST_VOLS ?= -v $(shell pwd)/$(TST_DIR):/var/lib/git:ro
 
 .PHONY: build build-all
 
@@ -40,7 +42,7 @@ test-all: test_1
 
 test_%: test-up_% test-html_% test-down_%
 	
-test-up_1: test/repo/repositories/mlan/docker-gitweb.git
+test-up_1: $(TST_DIR)/repositories/$(TST_REPO).git
 	#
 	# test (1) basic
 	#
@@ -60,15 +62,15 @@ test-up: test-up_1
 test-html: test-html_0
 	
 test-down: test-down_0
-	rm -rf test/repo
+	rm -rf $(TST_DIR)
 
-test/repo/projects.list:
-	mkdir -p test/repo/repositories
-	echo mlan/docker-gitweb.git > test/repo/projects.list
+$(TST_DIR)/projects.list:
+	mkdir -p $(TST_DIR)/repositories
+	echo $(TST_REPO).git > $(TST_DIR)/projects.list
 
-test/repo/repositories/mlan/docker-gitweb.git: test/repo/projects.list
-	git clone --bare https://github.com/mlan/docker-postfix-amavis.git \
-		test/repo/repositories/mlan/docker-gitweb.git
+$(TST_DIR)/repositories/$(TST_REPO).git: $(TST_DIR)/projects.list
+	git clone --bare https://github.com/$(TST_REPO).git \
+		$(TST_DIR)/repositories/$(TST_REPO).git
 
 test-logs:
 	docker container logs $(TST_NAME)
