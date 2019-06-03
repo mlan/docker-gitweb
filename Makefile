@@ -1,56 +1,81 @@
-include make_env
+-include    *.mk
 
-NS ?= mlan
-VERSION ?= latest
+BLD_ARG  ?= --build-arg DIST=nginx --build-arg REL=alpine
+BLD_REPO ?= mlan/gitweb
+BLD_VER  ?= latest
 
-IMAGE_NAME ?= gitweb
-CONTAINER_NAME ?= gitweb
-CONTAINER_INSTANCE ?= default
-SHELL ?= /bin/sh
+IMG_REPO ?= $(BLD_REPO)
+IMG_VER  ?= $(BLD_VER)
+IMG_CMD  ?= /bin/sh
 
-.PHONY: build  build-force shell exec run run-fg start stop rm-container rm-image purge create sleep logs
+TST_NAME ?= test-gitweb
+TST_PORT ?= localhost:8080
+TST_INET ?= -p $(TST_PORT):80
+TST_VOLS ?= -v $(shell pwd)/test/repo:/var/lib/git:ro
 
-build:
-	docker build -t $(NS)/$(IMAGE_NAME):$(VERSION) -f Dockerfile .
+.PHONY: build build-all
 
-build-force: stop purge build
+build-all: build
 
-shell:
-	docker run --rm --name $(CONTAINER_NAME)-$(CONTAINER_INSTANCE) -i -t $(PORTS) $(VOLUMES) $(ENV) $(NS)/$(IMAGE_NAME):$(VERSION) $(SHELL)
+build: Dockerfile
+	docker build $(BLD_ARG) --target base -t $(BLD_REPO):$(BLD_VER) .
 
-exec:
-	docker exec -it $(CONTAINER_NAME)-$(CONTAINER_INSTANCE) $(SHELL)
+build-base: Dockerfile
+	docker build $(BLD_ARG) --target base -t $(BLD_REPO):$(call _ver,$(BLD_VER),base) .
 
-run-fg:
-	docker run --rm --name $(CONTAINER_NAME)-$(CONTAINER_INSTANCE) $(PORTS) $(VOLUMES) $(ENV) $(NS)/$(IMAGE_NAME):$(VERSION)
+variables:
+	make -pn | grep -A1 "^# makefile"| grep -v "^#\|^--" | sort | uniq
 
-run:
-	docker run -d --name $(CONTAINER_NAME)-$(CONTAINER_INSTANCE) $(PORTS) $(VOLUMES) $(ENV) $(NS)/$(IMAGE_NAME):$(VERSION)
+ps:
+	docker ps -a
 
-start:
-	docker start $(CONTAINER_NAME)-$(CONTAINER_INSTANCE)
+prune:
+	docker image prune
+	docker container prune
+	docker volume prune
+	docker network prune
 
-stop:
-	docker stop $(CONTAINER_NAME)-$(CONTAINER_INSTANCE)
+test-all: test_1
+	
 
-rm-container:
-	docker rm $(CONTAINER_NAME)-$(CONTAINER_INSTANCE)
+test_%: test-up_% test-html_% test-down_%
+	
+test-up_1: test/repo/repositories/mlan/docker-gitweb.git
+	#
+	# test (1) basic
+	#
+	docker run --rm -d --name $(TST_NAME) $(TST_VOLS) $(TST_INET) $(IMG_REPO):$(IMG_VER)
 
-rm-image:
-	docker image rm $(NS)/$(IMAGE_NAME):$(VERSION)
+test-html_%:
+	wget -O - $(TST_PORT) >/dev/null || false
+	#
+	# test ($*) success
+	#
 
-logs:
-	docker container logs $(CONTAINER_NAME)-$(CONTAINER_INSTANCE)
+test-down_%:
+	docker stop $(TST_NAME) 2>/dev/null || true
 
-create:
-	docker create --name $(CONTAINER_NAME)-$(CONTAINER_INSTANCE) $(PORTS) $(VOLUMES) $(ENV) $(NS)/$(IMAGE_NAME):$(VERSION)
+test-up: test-up_1
+	
+test-html: test-html_0
+	
+test-down: test-down_0
+	rm -rf test/repo
 
+test/repo/projects.list:
+	mkdir -p test/repo/repositories
+	echo mlan/docker-gitweb.git > test/repo/projects.list
 
-purge: rm-container rm-image
+test/repo/repositories/mlan/docker-gitweb.git: test/repo/projects.list
+	git clone --bare https://github.com/mlan/docker-postfix-amavis.git \
+		test/repo/repositories/mlan/docker-gitweb.git
 
-sleep:
-	sleep 3
+test-logs:
+	docker container logs $(TST_NAME)
 
-default: build
+test-cmd:
+	docker exec -it $(TST_NAME) $(IMG_CMD)
 
+test-diff:
+	docker container diff $(TST_NAME)
 
