@@ -11,7 +11,7 @@ This (non official) repository provides read only [gitweb](https://git-scm.com/d
 
 Feature list follows below
 
-- gitweb
+- [gitweb](https://git-scm.com/docs/gitweb)
 
 ## Tags
 
@@ -62,7 +62,15 @@ volumes:
 
 ## Environment variables
 
-When you create the `mlan/gitweb` container, you can configure the services by passing one or more environment variables or arguments on the docker run command line. Once the services has been configured a lock file is created, to avoid repeating the configuration procedure when the container is restated. 
+When you start the `mlan/gitweb` container, you can configure gitweb by passing one or more environment variables or arguments on the docker run command line.
+
+#### `PROJECTROOT`
+The directories where your projects are. Must not end with a slash.
+Default: `PROJECTROOT=/var/lib/git/repositories`
+
+#### `PROJECTS_LIST`
+File with project list; by default, simply scan the projectroot dir.
+Default: `PROJECTS_LIST=/var/lib/git/projects.list`
 
 ## Persistent storage
 
