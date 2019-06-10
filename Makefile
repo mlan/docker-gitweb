@@ -14,6 +14,7 @@ TST_INET ?= -p $(TST_PORT):80
 TST_DIR  ?= test/repo
 TST_REPO ?= mlan/docker-gitweb
 TST_VOLS ?= -v $(shell pwd)/$(TST_DIR):/var/lib/git:ro
+TST_WEBB ?= firefox
 
 .PHONY: build build-all
 
@@ -39,7 +40,6 @@ prune:
 
 test-all: test_1
 	
-
 test_%: test-up_% test-html_% test-down_%
 	
 test-up_1: $(TST_DIR)/repositories/$(TST_REPO).git
@@ -47,6 +47,12 @@ test-up_1: $(TST_DIR)/repositories/$(TST_REPO).git
 	# test (1) basic
 	#
 	docker run --rm -d --name $(TST_NAME) $(TST_VOLS) $(TST_INET) $(IMG_REPO):$(IMG_VER)
+
+test-up_2: $(TST_DIR)/repositories/$(TST_REPO).git
+	#
+	# test (2) basic PROJECTS_LIST=
+	#
+	docker run --rm -d --name $(TST_NAME) -e PROJECTS_LIST= $(TST_VOLS) $(TST_INET) $(IMG_REPO):$(IMG_VER)
 
 test-html_%:
 	wget -O - $(TST_PORT) >/dev/null || false
@@ -63,6 +69,9 @@ test-html: test-html_0
 	
 test-down: test-down_0
 	rm -rf $(TST_DIR)
+
+test-web:
+	$(TST_WEBB) $(TST_PORT)
 
 $(TST_DIR)/projects.list:
 	mkdir -p $(TST_DIR)/repositories
@@ -81,3 +90,5 @@ test-cmd:
 test-diff:
 	docker container diff $(TST_NAME)
 
+test-theme-kogakure:
+	docker exec -it $(TST_NAME) sh -c 'git clone https://github.com/kogakure/gitweb-theme.git /tmp/gitweb-theme && apk --no-cache --update add bash && cd /tmp/gitweb-theme && ./setup --install'
