@@ -1,5 +1,14 @@
 #!/bin/sh -e
 
-spawn-fcgi -s /var/run/fcgiwrap.socket -u nginx -- /usr/bin/fcgiwrap 2>&1
+DOCKER_ENTRY_DIR=${DOCKER_ENTRY_DIR-/etc/entrypoint.d}
 
-exec nginx -g 'daemon off;' 2>&1
+# redirect stderr
+exec 2>&1
+
+# run all entry scripts in $DOCKER_ENTRY_DIR
+if [ -d "$DOCKER_ENTRY_DIR" ]; then
+	run-parts "$DOCKER_ENTRY_DIR"
+fi
+
+# assume arguments are command with arguments to be executed
+exec "$@"

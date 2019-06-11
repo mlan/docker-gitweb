@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# launch fcgi server
+spawn-fcgi -s /var/run/fcgiwrap.socket -M 0666 -u nginx -- /usr/bin/fcgiwrap

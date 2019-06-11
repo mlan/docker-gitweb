@@ -13,15 +13,18 @@ ARG	REL=alpine
 FROM	$DIST:$REL AS base
 LABEL	maintainer=mlan
 
-ENV	PROJECTROOT=/var/lib/git/repositories \
+ENV	DOCKER_ENTRY_DIR=/etc/entrypoint.d \
+	PROJECTROOT=/var/lib/git/repositories \
 	PROJECTS_LIST=/var/lib/git/projects.list
 
 #
 # Copy config files to image
 #
 
-COPY	src/git-gitweb.template /tmp/
+COPY	src/git-gitweb_base.template /tmp/git-gitweb.template
 COPY	src/nginx-gitweb.conf /etc/nginx/conf.d/gitweb.conf
+COPY	src/entrypoint.sh /usr/local/bin/
+COPY	src/entrypoint.d $DOCKER_ENTRY_DIR/
 
 #
 # Install
@@ -34,7 +37,7 @@ RUN	apk --no-cache --update add \
 	perl-cgi \
 	fcgiwrap \
 	spawn-fcgi \
-	&& mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.off
+	&& mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.dist
 
 #
 # state standard http port
@@ -53,6 +56,30 @@ HEALTHCHECK CMD nginx -t &>/dev/null && wget -O - localhost:80 &>/dev/null \
 # Entrypoint, how container is run
 #
 
-CMD	spawn-fcgi -s /var/run/fcgiwrap.socket -M 0666 -u nginx -- /usr/bin/fcgiwrap \
-	&& envsubst '$PROJECTROOT$PROJECTS_LIST' < /tmp/git-gitweb.template > /etc/gitweb.conf \
-	&& nginx -g "daemon off;"
+ENTRYPOINT	["entrypoint.sh"]
+
+CMD	["nginx", "-g", "daemon off;"]
+
+
+#
+#
+# target: full
+#
+# add highlight
+#
+#
+
+FROM	base AS full
+
+#
+# Copy config files to image
+#
+
+COPY	src/git-gitweb_full.template /tmp/git-gitweb.template
+
+#
+# Install
+#
+
+RUN	apk --no-cache --update add \
+	highlight

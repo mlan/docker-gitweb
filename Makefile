@@ -23,8 +23,8 @@ build-all: build
 build: Dockerfile
 	docker build $(BLD_ARG) --target base -t $(BLD_REPO):$(BLD_VER) .
 
-build-base: Dockerfile
-	docker build $(BLD_ARG) --target base -t $(BLD_REPO):$(call _ver,$(BLD_VER),base) .
+build_%: Dockerfile
+	docker build $(BLD_ARG) --target $* -t $(BLD_REPO):$(call _ver,$(BLD_VER),$*) .
 
 variables:
 	make -pn | grep -A1 "^# makefile"| grep -v "^#\|^--" | sort | uniq
@@ -71,7 +71,7 @@ test-down: test-down_0
 	rm -rf $(TST_DIR)
 
 test-web:
-	$(TST_WEBB) $(TST_PORT)
+	$(TST_WEBB) $(TST_PORT) &
 
 $(TST_DIR)/projects.list:
 	mkdir -p $(TST_DIR)/repositories
