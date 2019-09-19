@@ -10,5 +10,5 @@ if [ -d "$DOCKER_ENTRY_DIR" ]; then
 	run-parts "$DOCKER_ENTRY_DIR"
 fi
 
-# assume arguments are command with arguments to be executed
+# assume arguments represent a command with arguments to be executed
 exec "$@"
