@@ -1,4 +1,6 @@
 #!/bin/sh
 
 # launch fcgi server
-spawn-fcgi -s /var/run/fcgiwrap.socket -M 0666 -u nginx -- /usr/bin/fcgiwrap
+# run as root so we can read read repositores regardless
+# let nginx own socket so we can talk
+spawn-fcgi -s /var/run/fcgiwrap.socket -M 0666 -U nginx -- /usr/bin/fcgiwrap

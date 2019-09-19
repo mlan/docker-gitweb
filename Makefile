@@ -9,7 +9,7 @@ IMG_VER  ?= $(BLD_VER)
 IMG_CMD  ?= /bin/sh
 
 TST_NAME ?= test-gitweb
-TST_PORT ?= localhost:8080
+TST_PORT ?= 127.0.0.1:8080
 TST_INET ?= -p $(TST_PORT):80
 TST_DIR  ?= test/repo
 TST_REPO ?= mlan/docker-gitweb
@@ -90,6 +90,9 @@ $(TST_DIR)/repositories/$(TST_REPO).git: $(TST_DIR)/projects.list
 
 test-logs:
 	docker container logs $(TST_NAME)
+
+test-top:
+	docker container top $(TST_NAME)
 
 test-cmd:
 	docker exec -it $(TST_NAME) $(IMG_CMD)
