@@ -15,6 +15,7 @@ TST_DIR  ?= test/repo
 TST_REPO ?= mlan/docker-gitweb
 TST_VOLS ?= -v $(shell pwd)/$(TST_DIR):/var/lib/git:ro
 TST_WEBB ?= firefox
+TST_XTRA ?= --cap-add SYS_PTRACE
 
 .PHONY: build build-all
 
@@ -46,13 +47,19 @@ test-up_1: $(TST_DIR)/repositories/$(TST_REPO).git
 	#
 	# test (1) basic
 	#
-	docker run --rm -d --name $(TST_NAME) $(TST_VOLS) $(TST_INET) $(IMG_REPO):$(IMG_VER)
+	docker run --rm -d --name $(TST_NAME) $(TST_VOLS) $(TST_INET) $(TST_XTRA) $(IMG_REPO):$(IMG_VER)
 
 test-up_2: $(TST_DIR)/repositories/$(TST_REPO).git
 	#
 	# test (2) basic PROJECTS_LIST=
 	#
-	docker run --rm -d --name $(TST_NAME) -e PROJECTS_LIST= $(TST_VOLS) $(TST_INET) $(IMG_REPO):$(IMG_VER)
+	docker run --rm -d --name $(TST_NAME) -e PROJECTS_LIST= $(TST_VOLS) $(TST_INET) $(TST_XTRA) $(IMG_REPO):$(IMG_VER)
+
+test-up_3:
+	#
+	# test (3) basic existing repo
+	#
+	docker run --rm -d --name $(TST_NAME) $(TST_VOLS) $(TST_INET) $(TST_XTRA) $(IMG_REPO):$(IMG_VER)
 
 test-html_%:
 	wget -O - $(TST_PORT) >/dev/null || false
@@ -92,3 +99,12 @@ test-diff:
 
 test-theme-kogakure:
 	docker exec -it $(TST_NAME) sh -c 'git clone https://github.com/kogakure/gitweb-theme.git /tmp/gitweb-theme && apk --no-cache --update add bash && cd /tmp/gitweb-theme && ./setup --install'
+	
+test-htop: test-debugtools
+	docker exec -it $(TST_NAME) htop
+
+test-debugtools:
+	docker exec -it $(TST_NAME) apk --no-cache --update add \
+	nano less lsof htop openldap-clients bind-tools iputils strace
+
+	
