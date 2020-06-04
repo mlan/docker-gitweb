@@ -1,2 +1,5 @@
 # Road map
-Nothing yet.
+
+## Logging
+
+- Apache is flooding the logs. Disable access logging.
