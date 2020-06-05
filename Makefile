@@ -109,5 +109,3 @@ test-htop: test-debugtools
 test-debugtools:
 	docker exec -it $(TST_NAME) apk --no-cache --update add \
 	nano less lsof htop openldap-clients bind-tools iputils strace
-
-	

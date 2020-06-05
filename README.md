@@ -6,16 +6,13 @@
 ![docker stars](https://img.shields.io/docker/stars/mlan/gitweb.svg?label=stars&style=flat-square&logo=docker)
 ![docker pulls](https://img.shields.io/docker/pulls/mlan/gitweb.svg?label=pulls&style=flat-square&logo=docker)
 
-This (non official) repository provides read only [gitweb](https://git-scm.com/docs/gitweb), which is used to browse git repositories.
+Provides a [Gitweb](https://git-scm.com/docs/gitweb) — a Git web interface (web frontend to Git repositories) — docker image (non official).
 
 ## Features
 
-Feature list follows below
-
-- [gitweb](https://git-scm.com/docs/gitweb), read-only
-- Makefile which can build images and do some management and testing
-- Health check
+- [Gitweb](https://git-scm.com/docs/gitweb), read access only
 - Small image size based on [Alpine Linux](https://alpinelinux.org/)
+- Health check
 - Demo based on `docker-compose.yml` and `Makefile` files
 
 ## Tags
@@ -61,16 +58,16 @@ volumes:
 
 ## Environment variables
 
-When you start the `mlan/gitweb` container, you can configure gitweb by passing one or more environment variables or arguments on the docker run command line.
+When you start the `mlan/gitweb` container, you can configure Gitweb by passing one or more environment variables or arguments on the docker run command line.
 
 #### `PROJECTROOT`
 
-The directories where your projects are. Must not end with a slash.
+The directories where your projects are. *Must not end with a slash.*
 Default: `PROJECTROOT=/var/lib/git/repositories`
 
 #### `PROJECTS_LIST`
 
-Define which file gitweb reads to learn the git projects. If set to empty string; gitweb simply scan the `PROJECTROOT` directory.
+Define which file Gitweb reads to learn the git projects. If set to empty string; Gitweb simply scan the `PROJECTROOT` directory.
 Default: `PROJECTS_LIST=/var/lib/git/projects.list`
 
 ## Persistent storage
@@ -81,7 +78,7 @@ Such volume can be shared by the container managing the git repositories and the
 
 ### Gitolite configuration
 
-We start by assuming that the volume `test-repo-data`, which will hold all git repository data, is mounted by the gitolite container at the flowing location: `test-repo-data:/var/lib/git`. This volume is now also mounted, read-only is sufficient, by the `mlan/gitweb` container. To allow gitweb to locate the repositories, the environment variables are set to: `PROJECTROOT=/var/lib/git/repositories` and `PROJECTS_LIST=/var/lib/git/projects.list`, see docker-compose file above and example below.
+We start by assuming that the volume `test-repo-data`, which will hold all git repository data, is mounted by the Gitolite container at the flowing location: `test-repo-data:/var/lib/git`. This volume is now also mounted, read-only is sufficient, by the `mlan/gitweb` container. To allow Gitweb to locate the repositories, the environment variables are set to: `PROJECTROOT=/var/lib/git/repositories` and `PROJECTS_LIST=/var/lib/git/projects.list`, see docker-compose file above and example below.
 
 ```bash
 docker run -d --name test-gitweb -v test-repo-data:/var/lib/git:ro -e PROJECTROOT=/var/lib/git/repositories -e PROJECTS_LIST=/var/lib/git/projects.list -p 127.0.0.1:8080:80 mlan/gitweb
