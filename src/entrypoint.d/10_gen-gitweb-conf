@@ -1,4 +1,0 @@
-#!/bin/sh
-
-# generate gitweb.conf by using template
-envsubst '$PROJECTROOT$PROJECTS_LIST' < /tmp/git-gitweb.template > /etc/gitweb.conf

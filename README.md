@@ -65,7 +65,7 @@ volumes:
   repo-data:
 ```
 
-For the above example to produce anything interesting the volume `repo-data` must include at least one git repository.
+For the above example to produce anything interesting the volume `repo-data` must include at least one git repository.
 
 ## Demo
 
@@ -111,10 +111,31 @@ Default: `PROJECTS_LIST=/var/lib/git/projects.list`
 
 If you have [Gitolie](https://gitolite.com/gitolite/) and Gitweb running on the same machine, you will be able to browse the Gitolite repositories simply by having the services sharing file systems. The [docker compose example](#docker-compose-example) above is doing exactly that.
 
-The volume `repo-data` allow the containers share files. The volume has similar mount point in both containers, `repo-data:/var/lib/git`. The only difference is that it is sufficient to mount it read-only on the Gitweb container. The default values of both environment variables; `PROJECTROOT` and `PROJECTS_LIST` are adequate.
+The volume `repo-data` allow the containers share files. The volume has similar mount point in both containers, `repo-data:/var/lib/git`. The only difference is that it is sufficient to mount it read-only on the Gitweb container. The default values of both environment variables; `PROJECTROOT` and `PROJECTS_LIST` are adequate.
 
-It is of cause also possible to start the Gitweb container using the docker CLI:
+It is of cause also possible to start the Gitweb container using the docker command:
 
 ```bash
 docker run -d --name repo-gui -v repo-data:/var/lib/git:ro -p 127.0.0.1:8080:80 mlan/gitweb
+```
+
+# Implementation
+
+Here some implementation details are presented.
+
+## Container init scheme
+
+When the container is started, execution is handed over to the script [`entrypoint.sh`](src/docker/bin/entrypoint.sh). It has 2 stages; 1) *run* all entry scripts in `/etc/entrypoint.d/`, 2) *execute* command in `CMD ["nginx", "-g", "daemon off;"]`.
+
+The entry scripts are responsible for tasks like, generate configurations, and spawning processes.
+
+## Build assembly
+
+The entry scripts, discussed above, as well as other utility scrips are copied to the image during the build phase. The source file tree was designed to facilitate simple scanning, using wild-card matching, of source-module directories for files that should be copied to image. Directory names indicate its file types so they can be copied to the correct locations. The code snippet in the `Dockerfile` which achieves this is show below.
+
+```dockerfile
+COPY	src/*/bin $DOCKER_BIN_DIR/
+COPY	src/*/entrypoint.d $DOCKER_ENTRY_DIR/
+COPY	src/*/config $DOCKER_CONF_DIR/
+COPY	src/*/envsubst $DOCKER_ENVSUBST_DIR/
 ```

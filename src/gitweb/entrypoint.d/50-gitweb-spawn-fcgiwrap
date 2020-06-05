@@ -1,0 +1,9 @@
+#!/bin/sh
+#
+# 50-gitweb-spawn-fcgiwrap
+#
+# Launch the fcgi server.
+# Run as root so we can read repositories regardless
+# and let nginx own socket so we can talk.
+#
+spawn-fcgi -s /var/run/fcgiwrap.socket -M 0666 -U nginx -- /usr/bin/fcgiwrap

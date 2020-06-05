@@ -14,6 +14,10 @@ FROM	$DIST:$REL AS base
 LABEL	maintainer=mlan
 
 ENV	DOCKER_ENTRY_DIR=/etc/entrypoint.d \
+	DOCKER_BIN_DIR=/usr/local/bin \
+	DOCKER_CONF_DIR=/etc/nginx/conf.d \
+	DOCKER_ENVSUBST_DIR=usr/share/misc \
+	DOCKER_HIGHLIGHT_CMT='#' \
 	PROJECTROOT=/var/lib/git/repositories \
 	PROJECTS_LIST=/var/lib/git/projects.list
 
@@ -21,10 +25,10 @@ ENV	DOCKER_ENTRY_DIR=/etc/entrypoint.d \
 # Copy config files to image
 #
 
-COPY	src/git-gitweb_base.template /tmp/git-gitweb.template
-COPY	src/nginx-gitweb.conf /etc/nginx/conf.d/gitweb.conf
-COPY	src/entrypoint.sh /usr/local/bin/
-COPY	src/entrypoint.d $DOCKER_ENTRY_DIR/
+COPY	src/*/bin $DOCKER_BIN_DIR/
+COPY	src/*/entrypoint.d $DOCKER_ENTRY_DIR/
+COPY	src/*/config $DOCKER_CONF_DIR/
+COPY	src/*/envsubst $DOCKER_ENVSUBST_DIR/
 
 #
 # Install
@@ -72,10 +76,10 @@ CMD	["nginx", "-g", "daemon off;"]
 FROM	base AS full
 
 #
-# Copy config files to image
+# Enable highlight
 #
 
-COPY	src/git-gitweb_full.template /tmp/git-gitweb.template
+ENV	DOCKER_HIGHLIGHT_CMT=
 
 #
 # Install
