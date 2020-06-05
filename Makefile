@@ -41,13 +41,13 @@ test-up_1:
 	#
 	# test (1) base, mount .git
 	#
-	docker run --rm -d --name $(TST_NAME) $(TST_ENVV) $(TST_VOLS) $(TST_INET) $(IMG_REPO):base
+	docker run --rm -d --name $(TST_NAME) $(TST_ENVV) $(TST_VOLS) $(TST_INET) $(IMG_REPO):$(call _version,base,$(IMG_VER))
 
 test-up_2:
 	#
 	# test (2) full, mount .git
 	#
-	docker run --rm -d --name $(TST_NAME) $(TST_ENVV) $(TST_VOLS) $(TST_INET) $(IMG_REPO):full
+	docker run --rm -d --name $(TST_NAME) $(TST_ENVV) $(TST_VOLS) $(TST_INET) $(IMG_REPO):$(call _version,full,$(IMG_VER))
 
 test-html_%:
 	wget -O - $(TST_BIND) >/dev/null || false
