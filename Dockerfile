@@ -40,7 +40,7 @@ RUN	apk --no-cache --update add \
 	&& mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.dist
 
 #
-# state standard http port
+# state standard http port 80
 #
 
 EXPOSE	80

@@ -6,7 +6,7 @@
 ![docker stars](https://img.shields.io/docker/stars/mlan/gitweb.svg?label=stars&style=flat-square&logo=docker)
 ![docker pulls](https://img.shields.io/docker/pulls/mlan/gitweb.svg?label=pulls&style=flat-square&logo=docker)
 
-Provides a [Gitweb](https://git-scm.com/docs/gitweb) — a Git web interface (web frontend to Git repositories) — docker image (non official).
+Provides a [Gitweb](https://git-scm.com/docs/gitweb) — a Git web interface (web frontend to Git repositories) — docker image (non official).
 
 ## Features
 
@@ -22,14 +22,25 @@ is used. In addition to the three number version number you can use two or
 one number versions numbers, which refers to the latest version of the sub series.
 The tag `latest` references the build based on the latest commit to the repository.
 
+The `mlan/gitweb` repository contains a multi staged built. You select which build using the appropriate tag from `base` and `full` . The image with the tag `base` contains Gitweb.
+The `full` tag also include support for highlighting.
+
 To exemplify the usage of the tags, lets assume that the latest version is `1.0.0`. In this case `latest`, `1.0.0`, `1.0`, `1`, all identify the same image.
 
 # Usage
+
+You can start a `mlan/gitweb` container from the command line. The example below assumes that you are in a git directory and will start a web server that can be accessed on http://localhost:8080.
+
 ```bash
-docker run -d --name test-gitweb -v test-repo-data:/var/lib/git:ro -p 127.0.0.1:8080:80 mlan/gitweb
+docker run -d --name repoweb -e PROJECTS_LIST= -v $(pwd)/.git:/var/lib/git:ro -p 127.0.0.1:8080:80 mlan/gitweb
 ```
 
+You can also try out the [demo](#demo) that comes with the [github](https://github.com/mlan/docker-gitweb) repository.
+
 ## Docker compose example
+
+Using docker compose, the following `docker-compose.yml` file will start a [Gitolite](https://gitolite.com/gitolite/) server and Gitweb server.
+
 ```yaml
 version: '3'
 
@@ -37,23 +48,49 @@ services:
    repo:
     image: jgiannuzzi/gitolite
     ports:
-      - "localhost:22:22"
-    env_file:
-      - .init.env
+      - "22:22"
     volumes:
-      - test-repo-data:/var/lib/git
+      - repo-data:/var/lib/git
 
   repo-gui:
     image: mlan/gitweb
     ports:
-      - "localhost:8080:80"
+      - "8080:80"
     depends_on:
       - repo
     volumes:
-      - test-repo-data:/var/lib/git:ro
+      - repo-data:/var/lib/git:ro
 
 volumes:
-  test-repo-data:
+  repo-data:
+```
+
+For the above example to produce anything interesting the volume `repo-data` must include at least one git repository.
+
+## Demo
+
+This repository contains a `demo` directory which hold the `docker-compose.yml` file as well as a `Makefile` which might come handy. To run the demo first clone the [github](https://github.com/mlan/docker-asterisk) repository.
+
+```bash
+git clone https://github.com/mlan/docker-github.git
+```
+
+From within the `demo` directory you can start the container simply by typing:
+
+```bash
+make up
+```
+
+The you can connect to the Gitweb server by typing
+
+```bash
+make web
+```
+
+When you are done testing you can destroy the test container by typing
+
+```bash
+make destroy
 ```
 
 ## Environment variables
@@ -70,16 +107,14 @@ Default: `PROJECTROOT=/var/lib/git/repositories`
 Define which file Gitweb reads to learn the git projects. If set to empty string; Gitweb simply scan the `PROJECTROOT` directory.
 Default: `PROJECTS_LIST=/var/lib/git/projects.list`
 
-## Persistent storage
+## Gitolite
 
-By default, docker will store the configuration and run data within the container. This has the drawback that the configuration and data are lost together with the container should it be deleted. It can therefore be a good idea to use docker volumes and mount the configuration and data directories there so that the data will survive a container deletion.
+If you have [Gitolie](https://gitolite.com/gitolite/) and Gitweb running on the same machine, you will be able to browse the Gitolite repositories simply by having the services sharing file systems. The [docker compose example](#docker-compose-example) above is doing exactly that.
 
-Such volume can be shared by the container managing the git repositories and the `mlan/gitweb` container, see examples below.
+The volume `repo-data` allow the containers share files. The volume has similar mount point in both containers, `repo-data:/var/lib/git`. The only difference is that it is sufficient to mount it read-only on the Gitweb container. The default values of both environment variables; `PROJECTROOT` and `PROJECTS_LIST` are adequate.
 
-### Gitolite configuration
-
-We start by assuming that the volume `test-repo-data`, which will hold all git repository data, is mounted by the Gitolite container at the flowing location: `test-repo-data:/var/lib/git`. This volume is now also mounted, read-only is sufficient, by the `mlan/gitweb` container. To allow Gitweb to locate the repositories, the environment variables are set to: `PROJECTROOT=/var/lib/git/repositories` and `PROJECTS_LIST=/var/lib/git/projects.list`, see docker-compose file above and example below.
+It is of cause also possible to start the Gitweb container using the docker CLI:
 
 ```bash
-docker run -d --name test-gitweb -v test-repo-data:/var/lib/git:ro -e PROJECTROOT=/var/lib/git/repositories -e PROJECTS_LIST=/var/lib/git/projects.list -p 127.0.0.1:8080:80 mlan/gitweb
+docker run -d --name repo-gui -v repo-data:/var/lib/git:ro -p 127.0.0.1:8080:80 mlan/gitweb
 ```

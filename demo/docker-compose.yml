@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  repo-gui:
+    image: mlan/gitweb
+    ports:
+      - "${CNT_BIND-127.0.0.1:8080}:80"
+    environment:
+      - PROJECTROOT=/var/lib/git/repositories
+      - PROJECTS_LIST=
+    cap_add:
+      - sys_ptrace                          # Only here to help testing
+    volumes:
+      - ../.git:/var/lib/git/repositories/docker-gitweb.git:ro
