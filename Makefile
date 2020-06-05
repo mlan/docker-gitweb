@@ -18,6 +18,9 @@ TST_INET ?= -p $(TST_BIND):80
 TST_VOLS ?= -v $$(pwd)/.git:/var/lib/git/repositories/docker-gitweb.git:ro
 TST_ENVV ?= -e PROJECTS_LIST=
 
+TST_W8UP ?= 1
+TST_W8DN ?= 2
+
 .PHONY:
 
 build-all: build_base build_full
@@ -30,15 +33,21 @@ build_%: depends
 
 depends: Dockerfile
 
-test-all: test_1
+test-all: test_1 test_2
 	
-test_%: test-up_% test-html_% test-down_%
+test_%: test-up_% test-waitu_% test-html_% test-down_% test-waitd_%
 	
 test-up_1:
 	#
-	# test (1) mount .git
+	# test (1) base, mount .git
 	#
-	docker run --rm -d --name $(TST_NAME) $(TST_ENVV) $(TST_VOLS) $(TST_INET) $(IMG_REPO):$(IMG_VER)
+	docker run --rm -d --name $(TST_NAME) $(TST_ENVV) $(TST_VOLS) $(TST_INET) $(IMG_REPO):base
+
+test-up_2:
+	#
+	# test (2) full, mount .git
+	#
+	docker run --rm -d --name $(TST_NAME) $(TST_ENVV) $(TST_VOLS) $(TST_INET) $(IMG_REPO):full
 
 test-html_%:
 	wget -O - $(TST_BIND) >/dev/null || false
@@ -48,6 +57,12 @@ test-html_%:
 
 test-down_%:
 	docker stop $(TST_NAME) 2>/dev/null || true
+
+test-waitu_%:
+	sleep $(TST_W8UP)
+
+test-waitd_%:
+	sleep $(TST_W8DN)
 
 test-up: test-up_1
 	
