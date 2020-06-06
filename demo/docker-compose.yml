@@ -4,11 +4,11 @@ services:
   repo-gui:
     image: mlan/gitweb
     ports:
-      - "${CNT_BIND-127.0.0.1:8080}:80"
+      - "${CNT_BIND-127.0.0.1:8080}:80"     # HTTP port
     environment:
-      - PROJECTROOT=/var/lib/git/repositories
-      - PROJECTS_LIST=
+      - PROJECTS_LIST=                      # Scan repos when list is empty
     cap_add:
       - sys_ptrace                          # Only here to help testing
     volumes:
-      - ../.git:/var/lib/git/repositories/docker-gitweb.git:ro
+      - ../.git:/var/lib/git/repositories/docker-gitweb.git:ro # bind mount host
+      - /etc/localtime:/etc/localtime:ro    # Use host timezone
