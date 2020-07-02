@@ -13,7 +13,7 @@ ARG	REL=alpine
 FROM	$DIST:$REL AS base
 LABEL	maintainer=mlan
 
-ENV	DOCKER_ENTRY_DIR=/etc/entrypoint.d \
+ENV	DOCKER_ENTRY_DIR=/etc/docker/entry.d \
 	DOCKER_BIN_DIR=/usr/local/bin \
 	DOCKER_CONF_DIR=/etc/nginx/conf.d \
 	DOCKER_ENVSUBST_DIR=usr/share/misc \
@@ -26,7 +26,7 @@ ENV	DOCKER_ENTRY_DIR=/etc/entrypoint.d \
 #
 
 COPY	src/*/bin $DOCKER_BIN_DIR/
-COPY	src/*/entrypoint.d $DOCKER_ENTRY_DIR/
+COPY	src/*/entry.d $DOCKER_ENTRY_DIR/
 COPY	src/*/config $DOCKER_CONF_DIR/
 COPY	src/*/envsubst $DOCKER_ENVSUBST_DIR/
 
@@ -60,7 +60,7 @@ HEALTHCHECK CMD nginx -t &>/dev/null && wget -O - localhost:80 &>/dev/null \
 # Entrypoint, how container is run
 #
 
-ENTRYPOINT	["entrypoint.sh"]
+ENTRYPOINT	["docker-entrypoint.sh"]
 
 CMD	["nginx", "-g", "daemon off;"]
 

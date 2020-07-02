@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-DOCKER_ENTRY_DIR=${DOCKER_ENTRY_DIR-/etc/entrypoint.d}
+DOCKER_ENTRY_DIR=${DOCKER_ENTRY_DIR-/etc/docker/entry.d}
 
 # redirect stderr
 exec 2>&1

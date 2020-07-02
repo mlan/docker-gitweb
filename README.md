@@ -125,7 +125,7 @@ Here some implementation details are presented.
 
 ## Container init scheme
 
-When the container is started, execution is handed over to the script [`entrypoint.sh`](src/docker/bin/entrypoint.sh). It has 2 stages; 1) *run* all entry scripts in `/etc/entrypoint.d/`, 2) *execute* command in `CMD ["nginx", "-g", "daemon off;"]`.
+When the container is started, execution is handed over to the script [`docker-entrypoint.sh`](src/docker/bin/docker-entrypoint.sh). It has 2 stages; 1) *run* all entry scripts in `/etc/docker/entry.d/`, 2) *execute* command in `CMD ["nginx", "-g", "daemon off;"]`.
 
 The entry scripts are responsible for tasks like, generate configurations, and spawning processes.
 
@@ -135,7 +135,7 @@ The entry scripts, discussed above, as well as other utility scrips are copied t
 
 ```dockerfile
 COPY	src/*/bin $DOCKER_BIN_DIR/
-COPY	src/*/entrypoint.d $DOCKER_ENTRY_DIR/
+COPY	src/*/entry.d $DOCKER_ENTRY_DIR/
 COPY	src/*/config $DOCKER_CONF_DIR/
 COPY	src/*/envsubst $DOCKER_ENVSUBST_DIR/
 ```
