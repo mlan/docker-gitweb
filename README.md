@@ -3,8 +3,9 @@
 ![travis-ci test](https://img.shields.io/travis/mlan/docker-gitweb.svg?label=build&style=flat-square&logo=travis)
 ![docker build](https://img.shields.io/docker/cloud/build/mlan/gitweb.svg?label=build&style=flat-square&logo=docker)
 ![image size](https://img.shields.io/docker/image-size/mlan/gitweb.svg?label=size&style=flat-square&logo=docker)
-![docker stars](https://img.shields.io/docker/stars/mlan/gitweb.svg?label=stars&style=flat-square&logo=docker)
 ![docker pulls](https://img.shields.io/docker/pulls/mlan/gitweb.svg?label=pulls&style=flat-square&logo=docker)
+![docker stars](https://img.shields.io/docker/stars/mlan/gitweb.svg?label=stars&style=flat-square&logo=docker)
+![github stars](https://img.shields.io/github/stars/mlan/docker-gitweb.svg?label=stars&style=popout-square&logo=github)
 
 Provides a [Gitweb](https://git-scm.com/docs/gitweb) — a Git web interface (web frontend to Git repositories) — docker image (non official).
 

@@ -1,3 +1,7 @@
+# 1.0.3
+
+- [nginx](Dockerfile) Rebuild with new version.
+
 # 1.0.2
 
 - [docker](src/docker/bin/docker-entrypoint.sh) Now use entry.d and exit.d.

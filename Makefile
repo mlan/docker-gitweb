@@ -39,20 +39,29 @@ test_%: test-up_% test-waitu_% test-html_% test-down_% test-waitd_%
 	
 test-up_1:
 	#
+	#
+	#
 	# test (1) base, mount .git
+	#
 	#
 	docker run --rm -d --name $(TST_NAME) $(TST_ENVV) $(TST_VOLS) $(TST_INET) $(IMG_REPO):$(call _version,base,$(IMG_VER))
 
 test-up_2:
 	#
+	#
+	#
 	# test (2) full, mount .git
+	#
 	#
 	docker run --rm -d --name $(TST_NAME) $(TST_ENVV) $(TST_VOLS) $(TST_INET) $(IMG_REPO):$(call _version,full,$(IMG_VER))
 
 test-html_%:
 	wget -O - $(TST_BIND) >/dev/null || false
 	#
-	# test ($*) success
+	#
+	# test ($*) success ☺
+	#
+	#
 	#
 
 test-down_%:
