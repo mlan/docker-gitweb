@@ -1,6 +1,7 @@
 # 1.0.4
 
 - [test](test) Move all tests to separate folder.
+- [docker](README.md) Fixed badges.
 
 # 1.0.3
 
