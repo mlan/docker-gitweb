@@ -1,3 +1,7 @@
+# 1.0.4
+
+- [test](test) Move all tests to separate folder.
+
 # 1.0.3
 
 - [nginx](Dockerfile) Rebuild with new version.
