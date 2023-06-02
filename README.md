@@ -1,6 +1,6 @@
 # The `mlan/gitweb` repository
 
-![travis-ci test](https://img.shields.io/travis/mlan/docker-gitweb.svg?label=build&style=flat-square&logo=travis)
+![github action ci](https://img.shields.io/github/actions/workflow/status/mlan/docker-gitweb/testimage.yml?label=build&style=flat-square&logo=github)
 ![docker version](https://img.shields.io/docker/v/mlan/gitweb?label=version&style=flat-square&logo=docker)
 ![image size](https://img.shields.io/docker/image-size/mlan/gitweb/latest.svg?label=size&style=flat-square&logo=docker)
 ![docker pulls](https://img.shields.io/docker/pulls/mlan/gitweb.svg?label=pulls&style=flat-square&logo=docker)
