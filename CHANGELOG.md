@@ -1,3 +1,10 @@
+# 1.1.0
+
+- Allow env variable for the base URL.
+- Allow env viarable for the site name.
+- Enable gravatars.
+- Enable modern theme.
+
 # 1.0.5
 
 - [github](.github/workflows/testimage.yml) Now use GitHub Actions to test image.

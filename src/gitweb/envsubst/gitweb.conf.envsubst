@@ -5,10 +5,19 @@ our $projectroot = "${PROJECTROOT}";
 our $projects_list = "${PROJECTS_LIST}";
 
 # Base URLs for links displayed in the web interface.
-#our @git_base_url_list = qw(git://localhost http://git@localhost);
+# our @git_base_url_list = qw(git://localhost http://git@localhost);
 
 # To enable "blame" view (showing the author of each line in a source file), add the following line
 $feature{'blame'}{'default'} = [1];
 
 # To enable syntax highlighting with Gitweb, you have to first install the highlight package
 ${DOCKER_HIGHLIGHT_CMT}$feature{'highlight'}{'default'} = [1];
+
+# To enable gitweb to be served from a subdirectory rather than /.
+our $base_url = "${GITWEB_BASE_URL}";
+
+# To set the site name for the gitweb instance.
+our $site_name = "${GITWEB_SITE_NAME}";
+
+# Enable gravatars.
+$feature{'avatar'}{'default'} = ['gravatar'];

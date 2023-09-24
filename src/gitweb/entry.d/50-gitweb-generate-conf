@@ -4,5 +4,5 @@
 #
 # generate gitweb.conf by using envsubst
 #
-envsubst '$PROJECTROOT$PROJECTS_LIST$DOCKER_HIGHLIGHT_CMT' < \
+envsubst '$PROJECTROOT$PROJECTS_LIST$DOCKER_HIGHLIGHT_CMT$GITWEB_BASE_URL$GITWEB_SITE_NAME' < \
 	$DOCKER_ENVSUBST_DIR/gitweb.conf.envsubst > /etc/gitweb.conf
