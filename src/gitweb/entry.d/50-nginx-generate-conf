@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+# 50-nginx-generate-conf
+#
+# generate gitweb.conf for nginx by using envsubst
+#
+envsubst '$GITWEB_BASEURL' < \
+	$DOCKER_ENVSUBST_DIR/nginx.conf.envsubst > $DOCKER_CONF_DIR/gitweb.conf

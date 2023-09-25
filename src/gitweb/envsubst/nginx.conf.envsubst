@@ -9,6 +9,7 @@ server {
     gzip off;
     fastcgi_param SCRIPT_FILENAME /usr/share/gitweb/gitweb.cgi;
     fastcgi_param GITWEB_CONFIG /etc/gitweb.conf;
+    fastcgi_param PATH_INFO ${GITWEB_BASEURL};
     fastcgi_pass  unix:/var/run/fcgiwrap.socket;
 
     fastcgi_param PATH_INFO $1;

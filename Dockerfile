@@ -1,7 +1,6 @@
 ARG	DIST=nginx
 ARG	REL=alpine
 
-
 #
 #
 # target: base
@@ -20,7 +19,7 @@ ENV	DOCKER_ENTRY_DIR=/etc/docker/entry.d \
 	DOCKER_HIGHLIGHT_CMT='#' \
 	PROJECTROOT=/var/lib/git/repositories \
 	PROJECTS_LIST=/var/lib/git/projects.list \
-	GITWEB_BASE_URL="/" \
+	GITWEB_BASEURL="" \
 	GITWEB_SITE_NAME=""
 
 #
@@ -70,7 +69,6 @@ HEALTHCHECK CMD nginx -t &>/dev/null && wget -O - localhost:80 &>/dev/null \
 ENTRYPOINT	["docker-entrypoint.sh"]
 
 CMD	["nginx", "-g", "daemon off;"]
-
 
 #
 #

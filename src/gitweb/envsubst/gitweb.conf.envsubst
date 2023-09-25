@@ -14,7 +14,10 @@ $feature{'blame'}{'default'} = [1];
 ${DOCKER_HIGHLIGHT_CMT}$feature{'highlight'}{'default'} = [1];
 
 # To enable gitweb to be served from a subdirectory rather than /.
-our $base_url = "${GITWEB_BASE_URL}";
+our $per_request_config = 1;
+our $my_url = "${GITWEB_BASEURL}";
+our $my_uri = "${GITWEB_BASEURL}";
+our $base_url = "${GITWEB_BASEURL}";
 
 # To set the site name for the gitweb instance.
 our $site_name = "${GITWEB_SITE_NAME}";
