@@ -1,7 +1,6 @@
 ARG	DIST=nginx
 ARG	REL=alpine
 
-
 #
 #
 # target: base
@@ -19,7 +18,9 @@ ENV	DOCKER_ENTRY_DIR=/etc/docker/entry.d \
 	DOCKER_ENVSUBST_DIR=usr/share/misc \
 	DOCKER_HIGHLIGHT_CMT='#' \
 	PROJECTROOT=/var/lib/git/repositories \
-	PROJECTS_LIST=/var/lib/git/projects.list
+	PROJECTS_LIST=/var/lib/git/projects.list \
+	GITWEB_BASEURL="" \
+	GITWEB_SITE_NAME=""
 
 #
 # Copy config files to image
@@ -44,6 +45,11 @@ RUN	apk --no-cache --update add \
 	&& mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.dist
 
 #
+# copy the theme file over
+#
+COPY src/gitweb/theme/gitweb.css /usr/share/gitweb/static/gitweb.css
+
+#
 # state standard http port 80
 #
 
@@ -63,7 +69,6 @@ HEALTHCHECK CMD nginx -t &>/dev/null && wget -O - localhost:80 &>/dev/null \
 ENTRYPOINT	["docker-entrypoint.sh"]
 
 CMD	["nginx", "-g", "daemon off;"]
-
 
 #
 #
