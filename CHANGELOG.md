@@ -1,3 +1,8 @@
+# 1.0.6
+
+- [demo](demo/Makefile) Remove obsolete element version in docker-compose.yml.
+- [build](Dockerfile) Fix healthcheck.
+
 # 1.0.5
 
 - [github](.github/workflows/testimage.yml) Now use GitHub Actions to test image.

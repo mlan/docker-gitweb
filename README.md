@@ -43,7 +43,7 @@ You can also try out the [demo](#demo) that comes with the [github](https://gith
 Using docker compose, the following `docker-compose.yml` file will start a [Gitolite](https://gitolite.com/gitolite/) server and Gitweb server.
 
 ```yaml
-version: '3'
+name: demo
 
 services:
    repo:
