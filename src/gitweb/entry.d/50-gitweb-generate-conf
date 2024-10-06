@@ -6,3 +6,5 @@
 #
 envsubst '$PROJECTROOT$PROJECTS_LIST$DOCKER_HIGHLIGHT_CMT' < \
 	$DOCKER_ENVSUBST_DIR/gitweb.conf.envsubst > /etc/gitweb.conf
+envsubst '$SERVER_NAME' < \
+	$DOCKER_ENVSUBST_DIR/nginx.conf.envsubst > $DOCKER_CONF_DIR/nginx.conf

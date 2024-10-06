@@ -19,7 +19,8 @@ ENV	DOCKER_ENTRY_DIR=/etc/docker/entry.d \
 	DOCKER_ENVSUBST_DIR=usr/share/misc \
 	DOCKER_HIGHLIGHT_CMT='#' \
 	PROJECTROOT=/var/lib/git/repositories \
-	PROJECTS_LIST=/var/lib/git/projects.list
+	PROJECTS_LIST=/var/lib/git/projects.list \
+	SERVER_NAME=localhost
 
 #
 # Copy config files to image
@@ -27,7 +28,6 @@ ENV	DOCKER_ENTRY_DIR=/etc/docker/entry.d \
 
 COPY	src/*/bin $DOCKER_BIN_DIR/
 COPY	src/*/entry.d $DOCKER_ENTRY_DIR/
-COPY	src/*/config $DOCKER_CONF_DIR/
 COPY	src/*/envsubst $DOCKER_ENVSUBST_DIR/
 
 #

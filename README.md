@@ -108,6 +108,12 @@ Default: `PROJECTROOT=/var/lib/git/repositories`
 Define which file Gitweb reads to learn the git projects. If set to empty string; Gitweb simply scan the `PROJECTROOT` directory.
 Default: `PROJECTS_LIST=/var/lib/git/projects.list`
 
+#### `SERVER_NAME`
+
+The nginx [server_name](https://nginx.org/en/docs/http/server_names.html) directive and determine which server block is used for a given request. Since there only one block in this application the server_name is not important and can be anyting but empty.
+
+With gitweb the Nginx server_name is displayed in the browser tab. And since it can be chosen freely, it can be seen to have a decorative function.
+
 ## Gitolite
 
 If you have [Gitolie](https://gitolite.com/gitolite/) and Gitweb running on the same machine, you will be able to browse the Gitolite repositories simply by having the services sharing file systems. The [docker compose example](#docker-compose-example) above is doing exactly that.
@@ -137,6 +143,5 @@ The entry scripts, discussed above, as well as other utility scrips are copied t
 ```dockerfile
 COPY	src/*/bin $DOCKER_BIN_DIR/
 COPY	src/*/entry.d $DOCKER_ENTRY_DIR/
-COPY	src/*/config $DOCKER_CONF_DIR/
 COPY	src/*/envsubst $DOCKER_ENVSUBST_DIR/
 ```
