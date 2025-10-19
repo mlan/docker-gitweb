@@ -1,3 +1,7 @@
+# 1.0.8
+
+- [build](Dockerfile) Added the package `git-deamon` to the `full` target.
+
 # 1.0.7
 
 - [nginx](src/gitweb/envsubst/nginx.conf.envsubst) Now let envvar `SERVER_NAME` control the nginx server_name which is visible in the browser tab.

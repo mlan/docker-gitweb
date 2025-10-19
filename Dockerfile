@@ -85,4 +85,5 @@ ENV	DOCKER_HIGHLIGHT_CMT=
 #
 
 RUN	apk --no-cache --update add \
-	highlight
+	highlight \
+	git-daemon
